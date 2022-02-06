@@ -126,6 +126,8 @@ public class CustomizationTool : Window
 			SaveConfig();
 			categoryList.RefreshCategories();
 		};
+
+		displayedConfigForm = contentLayout.Add( new AssetPicker( this ) );
 	}
 
 	protected override void OnPaint()

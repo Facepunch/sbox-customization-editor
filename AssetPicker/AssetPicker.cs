@@ -9,6 +9,10 @@ public class AssetPicker : Widget
 
 	private Widget Canvas;
 	private BoxLayout CanvasLayout;
+	private TextEdit FilterInput;
+
+	private AssetType selectedAssetType;
+	private string filterText = string.Empty;
 
 	public AssetPicker( Widget parent = null )
 		: base( parent )
@@ -19,37 +23,85 @@ public class AssetPicker : Widget
 	private void CreateUI()
 	{
 		var l = this.MakeTopToBottom();
+		l.Spacing = 10;
 
 		var combo = l.Add( new ComboBox( this ) );
 		foreach( var type in Enum.GetValues<AssetType>() )
 		{
 			combo.AddItem( type.ToString(), null, () =>
 			{
-				RebuildAssetList( GetSelectedAddon(), type );
+				selectedAssetType = type;
+				RebuildAssetList( GetSelectedAddon(), type, filterText );
 			} );
 		}
 		combo.CurrentIndex = 0;
 
+		var searchrow = l.Add( new Widget( this ) );
+		{
+			var ltr = searchrow.MakeLeftToRight();
+			ltr.Spacing = 15;
+			var lbl = ltr.Add( new Label( "Filter", this ) );
+			FilterInput = ltr.Add( new TextEdit( this ) );
+			FilterInput.MaximumSize = new Vector2( 5000, 28 );
+		}
+
 		Canvas = l.Add( new Widget( this ), 1 );
 		CanvasLayout = Canvas.MakeTopToBottom();
+		CanvasLayout.Spacing = 3;
 
-		RebuildAssetList( GetSelectedAddon(), AssetType.All );
+		RebuildAssetList( GetSelectedAddon(), AssetType.All, filterText );
 
 		l.AddStretchCell( 100 );
 	}
 
-	private void RebuildAssetList( LocalAddon addon, AssetType type )
+	[Event.Frame]
+	private void CheckFilter()
+	{
+		if ( FilterInput.PlainText != filterText )
+		{
+			filterText = FilterInput.PlainText;
+			RebuildAssetList( GetSelectedAddon(), selectedAssetType, filterText );
+		}
+	}
+
+	private void RebuildAssetList( LocalAddon addon, AssetType type, string search = null )
 	{
 		foreach ( var child in Canvas.Children )
 			child.Destroy();
 
-		foreach ( var asset in AssetSystem.All
+		var row = CanvasLayout.Add( new Widget( Canvas ), 0 );
+		var layout = row.MakeLeftToRight();
+		var idx = 0;
+
+		// todo: qt grid layout
+
+		layout.Spacing = 3;
+
+		var assets = AssetSystem.All
 			.Where( x => BelongsToAddon( x, addon ) )
 			.Where( x => ShouldShow( x ) )
-			.Where( x => IsAssetType( x, type ) ) )
+			.Where( x => IsAssetType( x, type ) );
+
+		if( !string.IsNullOrEmpty( search ) )
 		{
-			CanvasLayout.Add( new AssetRow( asset, Canvas ) );
+			assets = assets.Where( x => x.Path.Contains( search, StringComparison.OrdinalIgnoreCase ) );
 		}
+
+		foreach ( var asset in assets )
+		{
+			layout.Add( new AssetRow( asset, row ) );
+
+			idx++;
+			if( idx % 8 == 0 )
+			{
+				layout.AddStretchCell( 1000 );
+				row = CanvasLayout.Add( new Widget( Canvas ), 0 );
+				layout = row.MakeLeftToRight();
+				layout.Spacing = 3;
+			}
+		}
+
+		layout.AddStretchCell( 1000 );
 
 		CanvasLayout.AddStretchCell( 1 );
 	}
