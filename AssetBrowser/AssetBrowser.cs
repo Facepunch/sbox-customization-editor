@@ -11,7 +11,7 @@ public class AssetBrowser : Widget
 
 	private Widget Canvas;
 	private BoxLayout CanvasLayout;
-	private TextEdit FilterInput;
+	private LineEdit FilterInput;
 
 	private int assetSize => 100;
 	private AssetType selectedAssetType;
@@ -51,8 +51,12 @@ public class AssetBrowser : Widget
 			var ltr = searchrow.MakeLeftToRight();
 			ltr.Spacing = 15;
 			ltr.Add( new Label( "Filter", this ) );
-			FilterInput = ltr.Add( new TextEdit( this ) );
-			FilterInput.MaximumSize = new Vector2( 5000, 28 );
+			FilterInput = ltr.Add( new LineEdit( this ) );
+			FilterInput.TextEdited += ( v ) =>
+			{
+				filterText = v;
+				RebuildAssetList( GetSelectedAddon(), AssetType.All, v );
+			};
 		}
 
 		var scrollArea = l.Add( new ScrollArea( this ), 1 );
@@ -65,16 +69,6 @@ public class AssetBrowser : Widget
 		scrollArea.Canvas = Canvas;
 
 		RebuildAssetList( GetSelectedAddon(), AssetType.All, filterText );
-	}
-
-	[Event.Frame]
-	private void CheckFilter()
-	{
-		if ( FilterInput.PlainText != filterText )
-		{
-			filterText = FilterInput.PlainText;
-			RebuildAssetList( GetSelectedAddon(), selectedAssetType, filterText );
-		}
 	}
 
 	protected override void OnResize()
