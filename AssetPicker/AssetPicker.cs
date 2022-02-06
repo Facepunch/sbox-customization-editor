@@ -7,6 +7,8 @@ using Tools;
 public class AssetPicker : Widget
 {
 
+	public Action<Asset> OnAssetPicked;
+
 	private Widget Canvas;
 	private BoxLayout CanvasLayout;
 	private TextEdit FilterInput;
@@ -99,7 +101,11 @@ public class AssetPicker : Widget
 
 		foreach ( var asset in assets )
 		{
-			layout.Add( new AssetRow( asset, row ) );
+			var assetBtn = layout.Add( new AssetRow( asset, row ) );
+			assetBtn.MouseClick += () =>
+			{
+				OnAssetPicked?.Invoke( asset );
+			};
 
 			idx++;
 			if( idx % 8 == 0 )

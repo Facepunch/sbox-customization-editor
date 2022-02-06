@@ -4,7 +4,7 @@ using Tools;
 internal class AssetRow : Widget
 {
 
-	private Asset asset;
+	private readonly Asset asset;
 	private bool mouseDown;
 
 	public AssetRow( Asset asset, Widget parent = null )
@@ -13,6 +13,7 @@ internal class AssetRow : Widget
 		this.asset = asset;
 		this.MinimumSize = 96;
 		this.Cursor = CursorShape.Finger;
+		this.ToolTip = asset.Path;
 	}
 
 	protected override void OnMouseEnter()
@@ -33,6 +34,8 @@ internal class AssetRow : Widget
 	{
 		base.OnMousePress( e );
 
+		if ( !e.LeftMouseButton ) return;
+
 		mouseDown = true;
 
 		Update();
@@ -41,6 +44,8 @@ internal class AssetRow : Widget
 	protected override void OnMouseReleased( MouseEvent e )
 	{
 		base.OnMouseReleased( e );
+
+		if ( !e.LeftMouseButton ) return;
 
 		mouseDown = false;
 
@@ -59,8 +64,12 @@ internal class AssetRow : Widget
 		Paint.BilinearFiltering = true;
 		Paint.SetPen( border, 2 );
 		Paint.SetBrush( Theme.Black );
-		Paint.DrawRect( r, 8 );
+		Paint.DrawRect( r, 4 );
 		Paint.Draw( r, asset.GetAssetThumb() );
+
+		Paint.SetDefaultFont();
+		Paint.SetPen( Theme.White, 2 );
+		Paint.DrawText( r.Expand(-4, -4), asset.Name, TextFlag.LeftBottom );
 	}
 
 }
