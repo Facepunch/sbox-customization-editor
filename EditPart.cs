@@ -46,15 +46,11 @@ internal class EditPart : Widget
 			var openAssetPicker = ltr.Add( new Button( "Find Asset", "file_open", this ) );
 			openAssetPicker.Clicked += () =>
 			{
-				var fd = new FileDialog( this );
-				fd.Title = "Find Asset";
-				fd.SetFindFile();
-
-				if ( fd.Execute() )
+				var browser = new AssetBrowserWindow( this, ( asset ) =>
 				{
-					part.AssetPath = CustomizationTool.Singleton.GetAddonRelativePath( fd.SelectedFile );
+					part.AssetPath = asset.Path;
 					RefreshPropertySheet();
-				}
+				} );
 			};
 		}
 
