@@ -13,6 +13,7 @@ public class AssetPicker : Widget
 	private BoxLayout CanvasLayout;
 	private TextEdit FilterInput;
 
+	private int assetSize => 100;
 	private AssetType selectedAssetType;
 	private string filterText = string.Empty;
 
@@ -57,7 +58,7 @@ public class AssetPicker : Widget
 		var scrollArea = l.Add( new ScrollArea( this ), 1 );
 		var scrollLayout = scrollArea.MakeTopToBottom();
 
-		Canvas = scrollLayout.Add( new Widget( this ) );
+		Canvas = scrollLayout.Add( new Widget( this ), 1 );
 		CanvasLayout = Canvas.MakeTopToBottom();
 		CanvasLayout.Spacing = 3;
 
@@ -74,6 +75,13 @@ public class AssetPicker : Widget
 			filterText = FilterInput.PlainText;
 			RebuildAssetList( GetSelectedAddon(), selectedAssetType, filterText );
 		}
+	}
+
+	protected override void OnResize()
+	{
+		base.OnResize();
+
+		RebuildAssetList( GetSelectedAddon(), selectedAssetType, filterText );
 	}
 
 	private void RebuildAssetList( LocalAddon addon, AssetType type, string search = null )
@@ -99,16 +107,19 @@ public class AssetPicker : Widget
 			assets = assets.Where( x => x.Path.Contains( search, StringComparison.OrdinalIgnoreCase ) );
 		}
 
+		var cols = (int)(Canvas.Parent.Size.x / ( assetSize + 5 ));
+		if ( cols == 0 ) cols = 7;
+
 		foreach ( var asset in assets )
 		{
-			var assetBtn = layout.Add( new AssetRow( asset, row ) );
+			var assetBtn = layout.Add( new AssetRow( asset, assetSize, row ) );
 			assetBtn.MouseClick += () =>
 			{
 				OnAssetPicked?.Invoke( asset );
 			};
 
 			idx++;
-			if( idx % 8 == 0 )
+			if( idx % cols == 0 )
 			{
 				layout.AddStretchCell( 1000 );
 				row = CanvasLayout.Add( new Widget( Canvas ), 0 );

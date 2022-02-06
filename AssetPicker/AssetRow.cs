@@ -7,11 +7,11 @@ internal class AssetRow : Widget
 	private readonly Asset asset;
 	private bool mouseDown;
 
-	public AssetRow( Asset asset, Widget parent = null )
+	public AssetRow( Asset asset, int size, Widget parent = null )
 		: base( parent )
 	{
 		this.asset = asset;
-		this.MinimumSize = 96;
+		this.MinimumSize = size;
 		this.Cursor = CursorShape.Finger;
 		this.ToolTip = asset.Path;
 	}
@@ -56,7 +56,7 @@ internal class AssetRow : Widget
 	{
 		base.OnPaint();
 
-		var r = new Rect( 0, 0, 96, 96 );
+		var r = new Rect( 0, 0, MinimumSize.x, MinimumSize.y );
 		var border = IsUnderMouse ? Theme.Green : Color.Transparent;
 		border = mouseDown ? Theme.White : border;
 
