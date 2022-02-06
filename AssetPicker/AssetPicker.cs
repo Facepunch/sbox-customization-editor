@@ -107,12 +107,14 @@ public class AssetPicker : Widget
 			assets = assets.Where( x => x.Path.Contains( search, StringComparison.OrdinalIgnoreCase ) );
 		}
 
+		// note: size doesn't set until after a Resize, so set a fixed col count
+		// Can't get AdjustSize to work how I want, missing something?
 		var cols = (int)(Canvas.Parent.Size.x / ( assetSize + 5 ));
-		if ( cols == 0 ) cols = 7;
+		if ( cols == 0 ) cols = 7; 
 
 		foreach ( var asset in assets )
 		{
-			var assetBtn = layout.Add( new AssetRow( asset, assetSize, row ) );
+			var assetBtn = layout.Add( new AssetButton( asset, assetSize, row ) );
 			assetBtn.MouseClick += () =>
 			{
 				OnAssetPicked?.Invoke( asset );

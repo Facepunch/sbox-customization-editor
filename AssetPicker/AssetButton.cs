@@ -1,13 +1,13 @@
 ﻿
 using Tools;
 
-internal class AssetRow : Widget
+internal class AssetButton : Widget
 {
 
 	private readonly Asset asset;
 	private bool mouseDown;
 
-	public AssetRow( Asset asset, int size, Widget parent = null )
+	public AssetButton( Asset asset, int size, Widget parent = null )
 		: base( parent )
 	{
 		this.asset = asset;
