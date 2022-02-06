@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using Tools;
 
-public class AssetPicker : Widget
+public class AssetBrowser : Widget
 {
 
 	public Action<Asset> OnAssetPicked;
@@ -17,7 +17,7 @@ public class AssetPicker : Widget
 	private AssetType selectedAssetType;
 	private string filterText = string.Empty;
 
-	public AssetPicker( Widget parent = null )
+	public AssetBrowser( Widget parent = null )
 		: base( parent )
 	{
 		CreateUI();

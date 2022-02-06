@@ -93,7 +93,7 @@ public class CustomizationTool : Window
 		tbtn.Clicked += () =>
 		{
 			displayedConfigForm?.Destroy();
-			displayedConfigForm = contentLayout.Add( new AssetPicker( this ) );
+			displayedConfigForm = contentLayout.Add( new AssetBrowser( this ) );
 		};
 
 		categoryList = sidebarLayout.Add( new CategoryList( Config, sidebar ) );
@@ -127,7 +127,7 @@ public class CustomizationTool : Window
 			categoryList.RefreshCategories();
 		};
 
-		displayedConfigForm = contentLayout.Add( new AssetPicker( this ) );
+		displayedConfigForm = contentLayout.Add( new AssetBrowser( this ) );
 	}
 
 	protected override void OnPaint()
