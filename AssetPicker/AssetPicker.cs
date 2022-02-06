@@ -45,13 +45,16 @@ public class AssetPicker : Widget
 			FilterInput.MaximumSize = new Vector2( 5000, 28 );
 		}
 
-		Canvas = l.Add( new Widget( this ), 1 );
+		var scrollArea = l.Add( new ScrollArea( this ), 1 );
+		var scrollLayout = scrollArea.MakeTopToBottom();
+
+		Canvas = scrollLayout.Add( new Widget( this ) );
 		CanvasLayout = Canvas.MakeTopToBottom();
 		CanvasLayout.Spacing = 3;
 
-		RebuildAssetList( GetSelectedAddon(), AssetType.All, filterText );
+		scrollArea.Canvas = Canvas;
 
-		l.AddStretchCell( 100 );
+		RebuildAssetList( GetSelectedAddon(), AssetType.All, filterText );
 	}
 
 	[Event.Frame]
@@ -103,7 +106,7 @@ public class AssetPicker : Widget
 
 		layout.AddStretchCell( 1000 );
 
-		CanvasLayout.AddStretchCell( 1 );
+		CanvasLayout.Add( new Widget( Canvas ), 1 );
 	}
 
 	private LocalAddon GetSelectedAddon()
