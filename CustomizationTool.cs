@@ -89,6 +89,13 @@ public class CustomizationTool : Window
 		var content = lo.Add( new Widget( this ), 1 );
 		var contentLayout = content.MakeTopToBottom();
 
+		var tbtn = sidebarLayout.Add( new Button( "asset picker test", "science", this ) );
+		tbtn.Clicked += () =>
+		{
+			displayedConfigForm?.Destroy();
+			displayedConfigForm = contentLayout.Add( new AssetPicker( this ) );
+		};
+
 		categoryList = sidebarLayout.Add( new CategoryList( Config, sidebar ) );
 		categoryList.OnCategorySelected += ( cat ) =>
 		{
