@@ -25,22 +25,29 @@ public class AssetPicker : Widget
 		var l = this.MakeTopToBottom();
 		l.Spacing = 10;
 
-		var combo = l.Add( new ComboBox( this ) );
-		foreach( var type in Enum.GetValues<AssetType>() )
+		var typerow = l.Add( new Widget( this ) );
 		{
-			combo.AddItem( type.ToString(), null, () =>
+			var ltr = typerow.MakeLeftToRight();
+			ltr.Spacing = 15;
+			ltr.Add( new Label( "Type", this ) );
+			var combo = ltr.Add( new ComboBox( this ), 1 );
+			foreach ( var type in Enum.GetValues<AssetType>() )
 			{
-				selectedAssetType = type;
-				RebuildAssetList( GetSelectedAddon(), type, filterText );
-			} );
+				combo.AddItem( type.ToString(), null, () =>
+				{
+					selectedAssetType = type;
+					RebuildAssetList( GetSelectedAddon(), type, filterText );
+				} );
+			}
+			combo.CurrentIndex = 0;
 		}
-		combo.CurrentIndex = 0;
+
 
 		var searchrow = l.Add( new Widget( this ) );
 		{
 			var ltr = searchrow.MakeLeftToRight();
 			ltr.Spacing = 15;
-			var lbl = ltr.Add( new Label( "Filter", this ) );
+			ltr.Add( new Label( "Filter", this ) );
 			FilterInput = ltr.Add( new TextEdit( this ) );
 			FilterInput.MaximumSize = new Vector2( 5000, 28 );
 		}
