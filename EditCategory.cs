@@ -10,14 +10,14 @@ internal class EditCategory : Widget
 	public EditCategory( CustomizationCategory cat, Widget parent = null )
 		: base( parent )
 	{
-		var l = MakeTopToBottom();
-		l.Spacing = 10;
+		SetLayout( LayoutMode.TopToBottom );
+		Layout.Spacing = 10;
 
-		var ps = l.Add( new PropertySheet( this ) );
+		var ps = Layout.Add( new PropertySheet( this ) );
 		ps.Target = cat;
 
-		l.Add( new Label( "Choose Category Icon" ) );
-		var openIconPicker = l.Add( new Button( "Find Icon", "image", this ) );
+		Layout.Add( new Label( "Choose Category Icon" ) );
+		var openIconPicker = Layout.Add( new Button( "Find Icon", "image", this ) );
 		openIconPicker.Clicked += () =>
 		{
 			var fd = new FileDialog( this );
@@ -32,8 +32,8 @@ internal class EditCategory : Widget
 			}
 		};
 
-		l.Add( new Label( "Choose Default Part" ) );
-		var defaultPartCombo = l.Add( new ComboBox( this ) );
+		Layout.Add( new Label( "Choose Default Part" ) );
+		var defaultPartCombo = Layout.Add( new ComboBox( this ) );
 		defaultPartCombo.AddItem( "None", null, () =>
 		 {
 			 cat.DefaultPartId = -1;
@@ -58,7 +58,7 @@ internal class EditCategory : Widget
 
 		defaultPartCombo.CurrentIndex = selectedIdx;
 
-		l.AddStretchCell( 1 );
+		Layout.AddStretchCell( 1 );
 	}
 
 }

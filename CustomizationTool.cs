@@ -65,48 +65,48 @@ public class CustomizationTool : Window
 		BuildMenuBar();
 
 		var w = new Widget( null );
-		var lo = new BoxLayout( BoxLayout.Direction.LeftToRight, w );
-		lo.SetContentMargins( 10, 10, 10, 10 );
-		lo.Spacing = 10;
+		w.SetLayout( LayoutMode.LeftToRight );
+		w.Layout.Margin = 10;
+		w.Layout.Spacing = 10;
 
 		Canvas = w;
 		Addon = GetSelectedAddon();
 
 		if( Addon == null )
 		{
-			lo.Add( new Label( "Select an addon in addon manager", this ) );
-			lo.AddStretchCell( 1 );
+			w.Layout.Add( new Label( "Select an addon in addon manager", this ) );
+			w.Layout.AddStretchCell( 1 );
 			return;
 		}
 
 		Title = Addon.Config.Title + " Customization Parts";
 		Config = LoadConfig();
 
-		var sidebar = lo.Add( new Widget( this ), 1 );
-		var sidebarLayout = sidebar.MakeTopToBottom();
+		var sidebar = w.Layout.Add( new Widget( this ), 1 );
+		sidebar.SetLayout( LayoutMode.TopToBottom );
 		sidebar.MaximumSize = new Vector2( 250, 9999 );
 
-		var content = lo.Add( new Widget( this ), 1 );
-		var contentLayout = content.MakeTopToBottom();
+		var content = w.Layout.Add( new Widget( this ), 1 );
+		content.SetLayout( LayoutMode.TopToBottom );
 
-		var tbtn = sidebarLayout.Add( new Button( "asset picker test", "science", this ) );
+		var tbtn = sidebar.Layout.Add( new Button( "asset picker test", "science", this ) );
 		tbtn.Clicked += () =>
 		{
 			displayedConfigForm?.Destroy();
-			displayedConfigForm = contentLayout.Add( new AssetBrowser( this ) );
+			displayedConfigForm = content.Layout.Add( new AssetBrowser( this ) );
 		};
 
-		categoryList = sidebarLayout.Add( new CategoryList( Config, sidebar ) );
+		categoryList = sidebar.Layout.Add( new CategoryList( Config, sidebar ) );
 		categoryList.OnCategorySelected += ( cat ) =>
 		{
 			displayedConfigForm?.Destroy();
-			displayedConfigForm = contentLayout.Add( new EditCategory( cat, content ) );
+			displayedConfigForm = content.Layout.Add( new EditCategory( cat, content ) );
 		};
 
 		categoryList.OnPartSelected += ( part ) =>
 		{
 			displayedConfigForm?.Destroy();
-			displayedConfigForm = contentLayout.Add( new EditPart( part, content ) );
+			displayedConfigForm = content.Layout.Add( new EditPart( part, content ) );
 		};
 
 		categoryList.OnModified += () =>
@@ -116,9 +116,9 @@ public class CustomizationTool : Window
 			categoryList.RefreshCategories();
 		};
 
-		sidebarLayout.AddSpacingCell( 16 );
+		sidebar.Layout.AddSpacingCell( 16 );
 
-		var saveBtn = sidebarLayout.Add( new Button( "Save Changes", "save", this ) );
+		var saveBtn = sidebar.Layout.Add( new Button( "Save Changes", "save", this ) );
 		saveBtn.SetStyles( "Button { background-color: red; }" );
 		saveBtn.Clicked += () =>
 		{
@@ -127,7 +127,7 @@ public class CustomizationTool : Window
 			categoryList.RefreshCategories();
 		};
 
-		displayedConfigForm = contentLayout.Add( new AssetBrowser( this ) );
+		displayedConfigForm = content.Layout.Add( new AssetBrowser( this ) );
 	}
 
 	protected override void OnPaint()

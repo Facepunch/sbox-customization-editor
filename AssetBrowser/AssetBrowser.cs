@@ -10,7 +10,6 @@ public class AssetBrowser : Widget
 	public Action<Asset> OnAssetPicked;
 
 	private Widget Canvas;
-	private BoxLayout CanvasLayout;
 	private LineEdit FilterInput;
 
 	private int assetSize => 100;
@@ -25,15 +24,15 @@ public class AssetBrowser : Widget
 
 	private void CreateUI()
 	{
-		var l = this.MakeTopToBottom();
-		l.Spacing = 10;
+		SetLayout( LayoutMode.TopToBottom );
+		Layout.Spacing = 10;
 
-		var typerow = l.Add( new Widget( this ) );
+		var typerow = Layout.Add( new Widget( this ) );
 		{
-			var ltr = typerow.MakeLeftToRight();
-			ltr.Spacing = 15;
-			ltr.Add( new Label( "Type", this ) );
-			var combo = ltr.Add( new ComboBox( this ), 1 );
+			typerow.SetLayout( LayoutMode.LeftToRight );
+			typerow.Layout.Spacing = 15;
+			typerow.Layout.Add( new Label( "Type", this ) );
+			var combo = typerow.Layout.Add( new ComboBox( this ), 1 );
 			foreach ( var type in Enum.GetValues<AssetType>() )
 			{
 				combo.AddItem( type.ToString(), null, () =>
@@ -46,12 +45,12 @@ public class AssetBrowser : Widget
 		}
 
 
-		var searchrow = l.Add( new Widget( this ) );
+		var searchrow = Layout.Add( new Widget( this ) );
 		{
-			var ltr = searchrow.MakeLeftToRight();
-			ltr.Spacing = 15;
-			ltr.Add( new Label( "Filter", this ) );
-			FilterInput = ltr.Add( new LineEdit( this ) );
+			searchrow.SetLayout( LayoutMode.LeftToRight );
+			searchrow.Layout.Spacing = 15;
+			searchrow.Layout.Add( new Label( "Filter", this ) );
+			FilterInput = searchrow.Layout.Add( new LineEdit( this ) );
 			FilterInput.TextEdited += ( v ) =>
 			{
 				filterText = v;
@@ -59,12 +58,12 @@ public class AssetBrowser : Widget
 			};
 		}
 
-		var scrollArea = l.Add( new ScrollArea( this ), 1 );
-		var scrollLayout = scrollArea.MakeTopToBottom();
+		var scrollArea = Layout.Add( new ScrollArea( this ), 1 );
+		scrollArea.SetLayout( LayoutMode.TopToBottom );
 
-		Canvas = scrollLayout.Add( new Widget( this ), 1 );
-		CanvasLayout = Canvas.MakeTopToBottom();
-		CanvasLayout.Spacing = 3;
+		Canvas = scrollArea.Layout.Add( new Widget( this ), 1 );
+		Canvas.SetLayout( LayoutMode.TopToBottom );
+		Canvas.Layout.Spacing = 3;
 
 		scrollArea.Canvas = Canvas;
 
@@ -83,13 +82,13 @@ public class AssetBrowser : Widget
 		foreach ( var child in Canvas.Children )
 			child.Destroy();
 
-		var row = CanvasLayout.Add( new Widget( Canvas ), 0 );
-		var layout = row.MakeLeftToRight();
+		var row = Canvas.Layout.Add( new Widget( Canvas ), 0 );
+		row.SetLayout( LayoutMode.LeftToRight );
 		var idx = 0;
 
 		// todo: qt grid layout
 
-		layout.Spacing = 3;
+		row.Layout.Spacing = 3;
 
 		var assets = AssetSystem.All
 			.Where( x => BelongsToAddon( x, addon ) )
@@ -108,7 +107,7 @@ public class AssetBrowser : Widget
 
 		foreach ( var asset in assets )
 		{
-			var assetBtn = layout.Add( new AssetButton( asset, assetSize, row ) );
+			var assetBtn = row.Layout.Add( new AssetButton( asset, assetSize, row ) );
 			assetBtn.MouseClick += () =>
 			{
 				OnAssetPicked?.Invoke( asset );
@@ -117,16 +116,16 @@ public class AssetBrowser : Widget
 			idx++;
 			if( idx % cols == 0 )
 			{
-				layout.AddStretchCell( 1000 );
-				row = CanvasLayout.Add( new Widget( Canvas ), 0 );
-				layout = row.MakeLeftToRight();
-				layout.Spacing = 3;
+				row.Layout.AddStretchCell( 1000 );
+				row = Canvas.Layout.Add( new Widget( Canvas ), 0 );
+				row.SetLayout( LayoutMode.LeftToRight );
+				row.Layout.Spacing = 3;
 			}
 		}
 
-		layout.AddStretchCell( 1000 );
+		row.Layout.AddStretchCell( 1000 );
 
-		CanvasLayout.Add( new Widget( Canvas ), 1 );
+		Canvas.Layout.Add( new Widget( Canvas ), 1 );
 	}
 
 	private LocalAddon GetSelectedAddon()

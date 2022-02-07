@@ -29,23 +29,23 @@ internal class CreatePartDialog : Window
 
 		//
 		var w = new Widget( null );
-		var box = new BoxLayout( BoxLayout.Direction.TopToBottom, w );
-		var ps = box.Add( new PropertySheet( w ) );
-		box.SetContentMargins( 0, 10, 0, 0 );
+		w.SetLayout( LayoutMode.TopToBottom );
+		w.Layout.Margin = 10;
 
 		Canvas = w;
 
+		var ps = w.Layout.Add( new PropertySheet( w ) );
 		ps.AddSectionHeader( "Creating part in category: " + category.DisplayName );
 		ps.AddProperty( this, "DisplayName" );
 		ps.AddStretch( 1 );
 
 		var btns = new Widget( w );
 		{
-			var l = new BoxLayout( BoxLayout.Direction.LeftToRight, btns );
-			l.AddStretchCell( 100 );
-			l.SetContentMargins( 10, 10, 10, 10 );
-			var cancel = l.Add( new Button( "Cancel", "cancel", btns ) );
-			var save = l.Add( new Button( "Save", "save", btns ) );
+			btns.SetLayout( LayoutMode.LeftToRight );
+			btns.Layout.AddStretchCell( 100 );
+			btns.Layout.Margin = 10;
+			var cancel = btns.Layout.Add( new Button( "Cancel", "cancel", btns ) );
+			var save = btns.Layout.Add( new Button( "Save", "save", btns ) );
 
 			cancel.Clicked += () =>
 			{
@@ -60,8 +60,8 @@ internal class CreatePartDialog : Window
 			};
 		}
 
-		box.AddStretchCell( 1 );
-		box.Add( btns );
+		w.Layout.AddStretchCell( 1 );
+		w.Layout.Add( btns );
 		//
 
 		Show();

@@ -13,8 +13,7 @@ internal class CategoryList : Widget
 	public Action OnModified;
 
 	private Widget Canvas;
-	private BoxLayout CanvasLayout;
-	private BoxLayout ScrollLayout;
+	private ScrollArea Scroll;
 	private CustomizationConfig config;
 
 	public CategoryList( CustomizationConfig config, Widget parent = null )
@@ -22,9 +21,9 @@ internal class CategoryList : Widget
 	{
 		this.config = config;
 
-		var lo = MakeTopToBottom();
+		SetLayout( LayoutMode.TopToBottom );
 
-		var newCategoryButton = lo.Add( new Button( "New Category", "add", this ) );
+		var newCategoryButton = Layout.Add( new Button( "New Category", "add", this ) );
 		newCategoryButton.Clicked += () =>
 		{
 			new CreateCategoryDialog( this, ( catName ) =>
@@ -41,10 +40,10 @@ internal class CategoryList : Widget
 			} );
 		};
 
-		lo.AddSpacingCell( 10 );
+		Layout.AddSpacingCell( 10 );
 
-		Canvas = lo.Add( new Widget( this ), 1 );
-		CanvasLayout = Canvas.MakeTopToBottom();
+		Canvas = Layout.Add( new Widget( this ), 1 );
+		Canvas.SetLayout( LayoutMode.TopToBottom );
 
 		RefreshCategories();
 	}
@@ -52,11 +51,11 @@ internal class CategoryList : Widget
 	private void AddCategoryWithParts( CustomizationCategory cat, IEnumerable<CustomizationPart> parts )
 	{
 		{
-			var fuck = ScrollLayout.Add( new Fuck( true, Canvas ) );
-			var rtl = fuck.MakeLeftToRight();
-			rtl.Spacing = 2;
+			var fuck = Scroll.Canvas.Layout.Add( new Fuck( true, Canvas ) );
+			fuck.SetLayout( LayoutMode.LeftToRight );
+			fuck.Layout.Spacing = 2;
 
-			var catBtn = rtl.Add( new Button( cat.DisplayName, "category", Canvas ) );
+			var catBtn = fuck.Layout.Add( new Button( cat.DisplayName, "category", Canvas ) );
 			catBtn.SetStyles( CategoryStyle );
 			catBtn.Cursor = CursorShape.Finger;
 			catBtn.Clicked += () =>
@@ -65,7 +64,7 @@ internal class CategoryList : Widget
 				OnCategorySelected?.Invoke( cat );
 			};
 
-			var addBtn = rtl.Add( new Button( "", "add", Canvas ) );
+			var addBtn = fuck.Layout.Add( new Button( "", "add", Canvas ) );
 			addBtn.MaximumSize = new Vector2( 24, 24 );
 			addBtn.SetStyles( MiniBtnStyle );
 			addBtn.Cursor = CursorShape.Finger;
@@ -85,7 +84,7 @@ internal class CategoryList : Widget
 				} );
 			};
 
-			var delBtn = rtl.Add( new Button( "", "delete", Canvas ) );
+			var delBtn = fuck.Layout.Add( new Button( "", "delete", Canvas ) );
 			delBtn.MaximumSize = new Vector2( 24, 99 );
 			delBtn.SetStyles( RedMiniBtnStyle );
 			delBtn.Cursor = CursorShape.Finger;
@@ -101,11 +100,11 @@ internal class CategoryList : Widget
 
 		foreach ( var part in parts )
 		{
-			var fuck = ScrollLayout.Add( new Fuck( false, Canvas ) );
-			var rtl = fuck.MakeLeftToRight();
-			rtl.Spacing = 2;
+			var fuck = Scroll.Canvas.Layout.Add( new Fuck( false, Canvas ) );
+			fuck.SetLayout( LayoutMode.LeftToRight );
+			fuck.Layout.Spacing = 2;
 
-			var partBtn = rtl.Add( new Button( part.DisplayName, null, Canvas ) );
+			var partBtn = fuck.Layout.Add( new Button( part.DisplayName, null, Canvas ) );
 			partBtn.SetStyles( PartStyle );
 			partBtn.Clicked += () =>
 			{
@@ -114,7 +113,7 @@ internal class CategoryList : Widget
 			};
 			partBtn.Cursor = CursorShape.Finger;
 
-			var delBtn = rtl.Add( new Button( "", "delete", Canvas ) );
+			var delBtn = fuck.Layout.Add( new Button( "", "delete", Canvas ) );
 			delBtn.MaximumSize = new Vector2( 24, 99 );
 			delBtn.SetStyles( RedMiniBtnStyle );
 			delBtn.Cursor = CursorShape.Finger;
@@ -134,10 +133,10 @@ internal class CategoryList : Widget
 		foreach ( var child in Canvas.Children )
 			child.Destroy();
 
-		var scroll = CanvasLayout.Add( new ScrollArea( Canvas ), 1 );
-		scroll.Canvas = CanvasLayout.Add( new Widget( scroll ), 1 );
-
-		ScrollLayout = scroll.Canvas.MakeTopToBottom();
+		Scroll = Canvas.Layout.Add( new ScrollArea( Canvas ), 1 );
+		Scroll.SetLayout( LayoutMode.TopToBottom );
+		Scroll.Canvas = Canvas.Layout.Add( new Widget( Scroll ), 1 );
+		Scroll.Canvas.SetLayout( LayoutMode.TopToBottom );
 
 		var uncategorizedParts = config.Parts.Where( x => config.Categories.FirstOrDefault( y => y.Id == x.CategoryId ) == null );
 		if( uncategorizedParts.Count() > 0 )
@@ -152,7 +151,7 @@ internal class CategoryList : Widget
 			AddCategoryWithParts( cat, parts );
 		}
 
-		ScrollLayout.AddStretchCell( 1 );
+		Scroll.Layout.AddStretchCell( 1 );
 	}
 
 	private const string CategoryStyle = @"

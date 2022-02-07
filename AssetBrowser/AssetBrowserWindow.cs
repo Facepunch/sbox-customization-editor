@@ -10,8 +10,8 @@ public class AssetBrowserWindow : Window
 		Size = new Vector2( 756, 500 );
 		Title = "Asset Browser";
 		Canvas = new Widget( this );
-		var l = Canvas.MakeTopToBottom();
-		var browser = l.Add( new AssetBrowser( this ) );
+		Canvas.SetLayout( LayoutMode.TopToBottom );
+		var browser = Canvas.Layout.Add( new AssetBrowser( this ) );
 		browser.OnAssetPicked += ( asset ) =>
 		{
 			onAssetPicked?.Invoke( asset );

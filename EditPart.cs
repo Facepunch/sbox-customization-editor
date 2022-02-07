@@ -14,22 +14,22 @@ internal class EditPart : Widget
 	public EditPart( CustomizationPart part, Widget parent = null )
 		: base( parent )
 	{
-		var l = MakeTopToBottom();
-		l.Spacing = 10;
+		SetLayout( LayoutMode.TopToBottom );
+		Layout.Spacing = 10;
 
-		PropertySheet = l.Add( new PropertySheet( this ) );
+		PropertySheet = Layout.Add( new PropertySheet( this ) );
 		PropertySheet.Target = part;
 
 		var cfg = CustomizationTool.Singleton.Config;
 
-		l.Add( new Label( "Choose Icon/Asset" ) );
+		Layout.Add( new Label( "Choose Icon/Asset" ) );
 		// icon/asset picker buttons
 		{
-			var w = l.Add( new Widget( this ) );
-			var ltr = w.MakeLeftToRight();
-			ltr.Spacing = 10;
+			var w = Layout.Add( new Widget( this ) );
+			w.SetLayout( LayoutMode.LeftToRight );
+			w.Layout.Spacing = 10;
 
-			var openIconPicker = ltr.Add( new Button( "Find Icon", "image", this ) );
+			var openIconPicker = w.Layout.Add( new Button( "Find Icon", "image", this ) );
 			openIconPicker.Clicked += () =>
 			{
 				var fd = new FileDialog( this );
@@ -43,7 +43,7 @@ internal class EditPart : Widget
 				}
 			};
 
-			var openAssetPicker = ltr.Add( new Button( "Find Asset", "file_open", this ) );
+			var openAssetPicker = w.Layout.Add( new Button( "Find Asset", "file_open", this ) );
 			openAssetPicker.Clicked += () =>
 			{
 				var browser = new AssetBrowserWindow( this, ( asset ) =>
@@ -54,10 +54,10 @@ internal class EditPart : Widget
 			};
 		}
 
-		l.Add( new Label( "Choose Category" ) );
+		Layout.Add( new Label( "Choose Category" ) );
 		// category combo
 		{
-			var combo = l.Add( new ComboBox( this ) );
+			var combo = Layout.Add( new ComboBox( this ) );
 			combo.AddItem( "Uncategorized", null, () =>
 			{
 				part.CategoryId = -1;
@@ -77,7 +77,7 @@ internal class EditPart : Widget
 			combo.CurrentIndex = combo.FindIndex( partCat != null ? partCat.DisplayName : "Uncategorized" ) ?? 0;
 		}
 
-		l.AddStretchCell( 1 );
+		Layout.AddStretchCell( 1 );
 	}
 
 	private void RefreshPropertySheet()
