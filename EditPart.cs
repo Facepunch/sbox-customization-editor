@@ -46,7 +46,7 @@ internal class EditPart : Widget
 			var openAssetPicker = w.Layout.Add( new Button( "Find Asset", "file_open", this ) );
 			openAssetPicker.Clicked += () =>
 			{
-				var browser = new AssetBrowserWindow( this, ( asset ) =>
+				var browser = new AssetPickerWindow( this, ( asset ) =>
 				{
 					part.AssetPath = asset.Path;
 					RefreshPropertySheet();
