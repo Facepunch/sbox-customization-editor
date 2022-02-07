@@ -3,7 +3,7 @@ using Tools;
 
 namespace Facepunch.CustomizationTool;
 
-internal class CreateCategoryDialog : Window
+internal class CreateCategoryDialog : Dialog
 {
 
 	private static CreateCategoryDialog singleton;
@@ -19,29 +19,21 @@ internal class CreateCategoryDialog : Window
 			singleton = null;
 		}
 
-		IsDialog = true;
-		CloseButtonVisible = false;
-		DeleteOnClose = true;
-		ResizeButtonsVisible = false;
-		Title = "New Category";
-		Size = new Vector2( 350, 128 );
+		Window.Title = "Create Category";
+		Window.Height = 150;
 
-		//
-		var w = new Widget( null );
-		w.SetLayout( LayoutMode.TopToBottom );
-		w.Layout.Margin = 10;
+		SetLayout( LayoutMode.TopToBottom );
+		Layout.Margin = 10;
 
-		Canvas = w;
-
-		var ps = w.Layout.Add( new PropertySheet( w ) );
+		var ps = Layout.Add( new PropertySheet( this ) );
 		ps.AddProperty( this, "DisplayName" );
 		ps.AddStretch( 1 );
 
-		var btns = new Widget( w );
+		var btns = new Widget( this );
 		{
 			btns.SetLayout( LayoutMode.LeftToRight );
 			btns.Layout.AddStretchCell( 100 );
-			btns.Layout.Margin = 10;
+			btns.Layout.Spacing = 10;
 			var cancel = btns.Layout.Add( new Button( "Cancel", "cancel", btns ) );
 			var save = btns.Layout.Add( new Button( "Save", "save", btns ) );
 
@@ -58,8 +50,8 @@ internal class CreateCategoryDialog : Window
 			};
 		}
 
-		w.Layout.AddStretchCell( 1 );
-		w.Layout.Add( btns );
+		Layout.AddStretchCell( 1 );
+		Layout.Add( btns );
 		//
 
 		Show();
