@@ -21,7 +21,7 @@ internal class CreatePartDialog : Dialog
 		}
 
 		Window.Title = "New Part";
-		Window.Height = 150;
+		Window.Height = 200;
 
 		SetLayout( LayoutMode.TopToBottom );
 		Layout.Margin = 10;
