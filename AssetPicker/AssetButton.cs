@@ -1,4 +1,5 @@
 ﻿
+using Sandbox;
 using Tools;
 
 internal class AssetButton : Widget
@@ -6,6 +7,8 @@ internal class AssetButton : Widget
 
 	private readonly Asset asset;
 	private bool mouseDown;
+
+	private static AssetButton picked;
 
 	public AssetButton( Asset asset, int size, Widget parent = null )
 		: base( parent )
@@ -38,6 +41,11 @@ internal class AssetButton : Widget
 
 		mouseDown = true;
 
+		if ( picked?.IsValid ?? false )
+			picked.Update();
+
+		picked = this;
+
 		Update();
 	}
 
@@ -59,6 +67,7 @@ internal class AssetButton : Widget
 		var r = new Rect( 0, 0, MinimumSize.x, MinimumSize.y );
 		var border = IsUnderMouse ? Theme.Green : Color.Transparent;
 		border = mouseDown ? Theme.White : border;
+		border = picked == this ? Theme.Green : border;
 
 		Paint.Antialiasing = true;
 		Paint.BilinearFiltering = true;

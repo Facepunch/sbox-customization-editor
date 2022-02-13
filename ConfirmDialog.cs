@@ -80,4 +80,10 @@ public class ConfirmDialog : Dialog
 		return this;
 	}
 
+	public ConfirmDialog WithSize( int width, int height )
+	{
+		Window.Size = new Vector2( width, height );
+		return this;
+	}
+
 }

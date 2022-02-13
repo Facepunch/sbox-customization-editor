@@ -73,10 +73,15 @@ public class ObjectForm : Widget
 				btn.MinimumSize = new Vector2( 100, Theme.RowHeight );
 				btn.Clicked += () =>
 				{
-					var w = new AssetPickerWindow( this, ( asset ) =>
-					 {
-						 lineedit.Text = asset.Path;
-					 } );
+					Asset asset = null;
+					var assetPiker = new AssetPicker( this );
+					assetPiker.OnAssetPicked += v => asset = v;
+
+					var dialog = new ConfirmDialog( this )
+						.WithTitle( "Select an asset" )
+						.WithSize( 800, 500 )
+						.WithWidget( assetPiker )
+						.WithConfirm( () => lineedit.Text = asset?.Path ?? lineedit.Text );
 				};
 			}
 		}
