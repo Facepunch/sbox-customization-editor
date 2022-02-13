@@ -56,8 +56,10 @@ public class CategoryList : Widget
 						 DisplayName = obj.DisplayName,
 						 Id = config.CategoryIdAccumulator
 					 };
+					 selected = cat;
 					 config.Categories.Add( cat );
 					 OnModified?.Invoke();
+					 OnCategorySelected?.Invoke( cat );
 				 }, "Create" );
 		};
 
@@ -116,8 +118,10 @@ public class CategoryList : Widget
 							DisplayName = obj.DisplayName,
 							Id = config.PartIdAccumulator
 						};
+						selected = part;
 						config.Parts.Add( part );
 						OnModified?.Invoke();
+						OnPartSelected?.Invoke( part );
 					}, "Create" );
 			};
 
