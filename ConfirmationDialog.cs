@@ -21,7 +21,7 @@ internal class ConfirmationDialog : Dialog
 		Layout.Margin = 10;
 
 		Window.Title = "Confirm";
-		Window.Size = new Vector2( 500, 200 );
+		Window.Size = new Vector2( 500, 175 );
 
 		content = Layout.Add( new Widget( this ) );
 		content.SetLayout(LayoutMode.TopToBottom);
@@ -58,17 +58,11 @@ internal class ConfirmationDialog : Dialog
 		return this;
 	}
 
+	public ConfirmationDialog WithMessage( string message ) => WithWidget( new Label( message ) );
 	public ConfirmationDialog WithWidget( Widget widget )
 	{
 		content.Children.FirstOrDefault()?.Destroy();
 		content.Layout.Add( widget );
-		return this;
-	}
-
-	public ConfirmationDialog WithMessage( string message )
-	{
-		content.Children.FirstOrDefault()?.Destroy();
-		content.Layout.Add( new Label( message ) );
 		return this;
 	}
 
