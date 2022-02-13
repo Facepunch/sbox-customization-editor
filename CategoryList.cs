@@ -8,6 +8,9 @@ namespace Facepunch.CustomizationTool;
 internal class CategoryList : Widget
 {
 
+	private record CreateCategoryRecord( string DisplayName );
+	private record CreatePartRecord( int CategoryId, string DisplayName );
+
 	public Action<CustomizationCategory> OnCategorySelected;
 	public Action<CustomizationPart> OnPartSelected;
 	public Action OnModified;
@@ -26,18 +29,24 @@ internal class CategoryList : Widget
 		var newCategoryButton = Layout.Add( new Button( "New Category", "add", this ) );
 		newCategoryButton.Clicked += () =>
 		{
-			new CreateCategoryDialog( this, ( catName ) =>
-			{
-				config.CategoryIdAccumulator++;
-				var cat = new CustomizationCategory()
-				{
-					DefaultPartId = 0,
-					DisplayName = catName,
-					Id = config.CategoryIdAccumulator
-				};
-				config.Categories.Add( cat );
-				OnModified?.Invoke();
-			} );
+			CreateCategoryRecord obj = new( "New Category" );
+			CustomizationObjectForm widget = new( obj, this, false );
+
+			new ConfirmationDialog( this )
+				.WithWidget( widget )
+				.WithTitle( "Create a Category" )
+				.WithConfirm( () =>
+				 {
+					 config.CategoryIdAccumulator++;
+					 var cat = new CustomizationCategory()
+					 {
+						 DefaultPartId = 0,
+						 DisplayName = obj.DisplayName,
+						 Id = config.CategoryIdAccumulator
+					 };
+					 config.Categories.Add( cat );
+					 OnModified?.Invoke();
+				 }, "Create" );
 		};
 
 		Layout.AddSpacingCell( 10 );
@@ -70,18 +79,24 @@ internal class CategoryList : Widget
 			addBtn.Cursor = CursorShape.Finger;
 			addBtn.Clicked += () =>
 			{
-				new CreatePartDialog( this, cat, ( partName, categoryId ) =>
-				{
-					config.PartIdAccumulator++;
-					var part = new CustomizationPart()
+				CreatePartRecord obj = new( cat.Id, "New Category" );
+				CustomizationObjectForm widget = new( obj, this, false );
+
+				new ConfirmationDialog( this )
+					.WithWidget( widget )
+					.WithTitle( "Create a Category" )
+					.WithConfirm( () =>
 					{
-						CategoryId = categoryId,
-						DisplayName = partName,
-						Id = config.PartIdAccumulator
-					};
-					config.Parts.Add( part );
-					OnModified?.Invoke();
-				} );
+						config.PartIdAccumulator++;
+						var part = new CustomizationPart()
+						{
+							CategoryId = cat.Id,
+							DisplayName = obj.DisplayName,
+							Id = config.PartIdAccumulator
+						};
+						config.Parts.Add( part );
+						OnModified?.Invoke();
+					}, "Create" );
 			};
 
 			var delBtn = fuck.Layout.Add( new Button( "", "delete", Canvas ) );

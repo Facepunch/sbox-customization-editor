@@ -21,9 +21,9 @@ internal class ConfirmationDialog : Dialog
 		Layout.Margin = 10;
 
 		Window.Title = "Confirm";
-		Window.Height = 150;
+		Window.Size = new Vector2( 500, 200 );
 
-		content = Layout.Add( new Widget( this ), 1 );
+		content = Layout.Add( new Widget( this ) );
 		content.SetLayout(LayoutMode.TopToBottom);
 
 		footer = new Widget( this );
