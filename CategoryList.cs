@@ -211,6 +211,7 @@ public class CategoryList : Widget
 		}
 
 		Scroll.Layout.AddStretchCell( 1 );
+		Scroll.Canvas.Layout.AddStretchCell( 1 );
 
 		await Task.Delay( 15 );
 
