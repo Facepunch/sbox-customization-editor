@@ -19,7 +19,7 @@ internal class CustomizationObjectForm : Widget
 		if ( obj == null ) throw new NullReferenceException();
 
 		SetLayout( LayoutMode.TopToBottom );
-		Layout.Spacing = 4;
+		Layout.Spacing = 5;
 
 		foreach( var prop in obj.GetType().GetProperties() )
 		{
@@ -29,13 +29,15 @@ internal class CustomizationObjectForm : Widget
 
 			var row = Layout.Add( new Widget( this ) );
 			row.SetLayout( LayoutMode.LeftToRight );
-			row.MinimumSize = 24;
+			row.MinimumSize = Theme.RowHeight;
+			row.Layout.Spacing = 5;
 
 			var label = row.Layout.Add( new Label( GetFriendlyPropertyName( prop.Name ), this ) );
-			label.MinimumSize = new Vector2( 150, 24 );
+			label.MinimumSize = new Vector2( 150, Theme.RowHeight );
 
 			var lineedit = row.Layout.Add( new LineEdit( this ) );
 			lineedit.Text = prop.GetValue( obj )?.ToString();
+			lineedit.MinimumSize = label.MinimumSize;
 			lineedit.TextChanged += ( v ) =>
 			{
 				prop.SetValue( obj, v );
@@ -50,7 +52,8 @@ internal class CustomizationObjectForm : Widget
 
 			if ( prop.GetCustomAttribute<FilePickerAttribute>() != null )
 			{
-				var btn = row.Layout.Add( new Button( "Open File Dialog", this ), -1 );
+				var btn = row.Layout.Add( new Button( "File Dialog", this ), -1 );
+				btn.MinimumSize = new Vector2( 100, Theme.RowHeight );
 				btn.Clicked += () =>
 				{
 					var fd = new FileDialog( this );
@@ -66,7 +69,8 @@ internal class CustomizationObjectForm : Widget
 
 			if( prop.GetCustomAttribute<AssetPickerAttribute>() != null )
 			{
-				var btn = row.Layout.Add( new Button( "Open Asset Picker", this ), -1 );
+				var btn = row.Layout.Add( new Button( "Asset Picker", this ), -1 );
+				btn.MinimumSize = new Vector2( 100, Theme.RowHeight );
 				btn.Clicked += () =>
 				{
 					var w = new AssetPickerWindow( this, ( asset ) =>
