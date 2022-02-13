@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Tools;
 
 namespace Facepunch.CustomizationTool;
 
-internal class CategoryList : Widget
+public class CategoryList : Widget
 {
 
-	private record CreateCategoryRecord( string DisplayName );
-	private record CreatePartRecord( int CategoryId, string DisplayName );
+	//
+	// This thing needs a refactor
+	//
+
+	private record CategoryRecord( string DisplayName );
+	private record PartRecord( int CategoryId, string DisplayName );
 
 	public Action<CustomizationCategory> OnCategorySelected;
 	public Action<CustomizationPart> OnPartSelected;
@@ -29,10 +32,10 @@ internal class CategoryList : Widget
 		var newCategoryButton = Layout.Add( new Button( "New Category", "add", this ) );
 		newCategoryButton.Clicked += () =>
 		{
-			CreateCategoryRecord obj = new( "New Category" );
-			CustomizationObjectForm widget = new( obj, this, false );
+			CategoryRecord obj = new( "New Category" );
+			ObjectForm widget = new( obj, this, false );
 
-			new ConfirmationDialog( this )
+			new ConfirmDialog( this )
 				.WithWidget( widget )
 				.WithTitle( "Create a Category" )
 				.WithConfirm( () =>
@@ -79,10 +82,10 @@ internal class CategoryList : Widget
 			addBtn.Cursor = CursorShape.Finger;
 			addBtn.Clicked += () =>
 			{
-				CreatePartRecord obj = new( cat.Id, "New Part" );
-				CustomizationObjectForm widget = new( obj, this, false );
+				PartRecord obj = new( cat.Id, "New Part" );
+				ObjectForm widget = new( obj, this, false );
 
-				new ConfirmationDialog( this )
+				new ConfirmDialog( this )
 					.WithWidget( widget )
 					.WithTitle( "Create a Part" )
 					.WithConfirm( () =>
@@ -105,7 +108,7 @@ internal class CategoryList : Widget
 			delBtn.Cursor = CursorShape.Finger;
 			delBtn.Clicked += () =>
 			{
-				new ConfirmationDialog( Parent )
+				new ConfirmDialog( Parent )
 					.WithTitle( "Delete Category" )
 					.WithMessage( "Are you sure you wanna delete category: " + cat.DisplayName )
 					.WithConfirm( () =>
@@ -137,7 +140,7 @@ internal class CategoryList : Widget
 			delBtn.Cursor = CursorShape.Finger;
 			delBtn.Clicked += () =>
 			{
-				new ConfirmationDialog( Parent )
+				new ConfirmDialog( Parent )
 					.WithTitle( "Delete Part" )
 					.WithMessage( "Are you sure you wanna delete part: " + part.DisplayName )
 					.WithConfirm( () =>

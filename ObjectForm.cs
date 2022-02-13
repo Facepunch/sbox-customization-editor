@@ -5,7 +5,7 @@ using Tools;
 
 namespace Facepunch.CustomizationTool;
 
-internal class CustomizationObjectForm : Widget
+public class ObjectForm : Widget
 {
 
 	public Action OnDirty;
@@ -13,7 +13,7 @@ internal class CustomizationObjectForm : Widget
 
 	private Button saveButton;
 
-	public CustomizationObjectForm( object obj, Widget parent, bool saveBtn = true )
+	public ObjectForm( object obj, Widget parent, bool saveBtn = true )
 		: base( parent )
 	{
 		if ( obj == null ) throw new NullReferenceException();

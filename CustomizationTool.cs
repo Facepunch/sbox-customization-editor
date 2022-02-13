@@ -10,7 +10,7 @@ public class CustomizationTool : Window
 {
 
 	private CategoryList categoryList;
-	private CustomizationObjectForm displayedForm;
+	private ObjectForm displayedForm;
 
 	public static CustomizationTool Singleton;
 
@@ -93,14 +93,14 @@ public class CustomizationTool : Window
 		categoryList.OnCategorySelected += ( cat ) =>
 		{
 			displayedForm?.Destroy();
-			displayedForm = content.Layout.Add( new CustomizationObjectForm( cat, content ) );
+			displayedForm = content.Layout.Add( new ObjectForm( cat, content ) );
 			displayedForm.OnSave += SaveConfig;
 		};
 
 		categoryList.OnPartSelected += ( part ) =>
 		{
 			displayedForm?.Destroy();
-			displayedForm = content.Layout.Add( new CustomizationObjectForm( part, content ) );
+			displayedForm = content.Layout.Add( new ObjectForm( part, content ) );
 			displayedForm.OnSave += SaveConfig;
 		};
 

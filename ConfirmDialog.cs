@@ -3,7 +3,7 @@ using Tools;
 
 namespace Facepunch.CustomizationTool;
 
-internal class ConfirmationDialog : Dialog
+public class ConfirmDialog : Dialog
 {
 
 	private Widget content;
@@ -14,7 +14,7 @@ internal class ConfirmationDialog : Dialog
 	private Action onCancel;
 	private Action onConfirm;
 
-	public ConfirmationDialog( Widget parent )
+	public ConfirmDialog( Widget parent )
 		: base( parent )
 	{
 		SetLayout( LayoutMode.TopToBottom );
@@ -52,28 +52,28 @@ internal class ConfirmationDialog : Dialog
 		Show();
 	}
 
-	public ConfirmationDialog WithTitle( string title )
+	public ConfirmDialog WithTitle( string title )
 	{
 		Window.Title = title;
 		return this;
 	}
 
-	public ConfirmationDialog WithMessage( string message ) => WithWidget( new Label( message ) );
-	public ConfirmationDialog WithWidget( Widget widget )
+	public ConfirmDialog WithMessage( string message ) => WithWidget( new Label( message ) );
+	public ConfirmDialog WithWidget( Widget widget )
 	{
 		content.Children.FirstOrDefault()?.Destroy();
 		content.Layout.Add( widget );
 		return this;
 	}
 
-	public ConfirmationDialog WithConfirm( Action onConfirm, string text = null )
+	public ConfirmDialog WithConfirm( Action onConfirm, string text = null )
 	{
 		this.onConfirm = onConfirm;
 		confirmButton.Text = text ?? confirmButton.Text;
 		return this;
 	}
 
-	public ConfirmationDialog WithCancel( Action onCancel, string text = null )
+	public ConfirmDialog WithCancel( Action onCancel, string text = null )
 	{
 		this.onCancel = onCancel;
 		cancelButton.Text = text ?? cancelButton.Text;

@@ -15,12 +15,12 @@ public class CustomizationConfig
 public class CustomizationCategory
 {
 
-	[CustomizationObjectForm.ReadOnly]
+	[ObjectForm.ReadOnly]
 	public int Id { get; set; }
 	public string DisplayName { get; set; }
-	[CustomizationObjectForm.FilePicker]
+	[ObjectForm.FilePicker]
 	public string IconPath { get; set; }
-	[CustomizationObjectForm.PartDropdown]
+	[ObjectForm.PartDropdown]
 	public int DefaultPartId { get; set; }
 
 }
@@ -28,14 +28,14 @@ public class CustomizationCategory
 public class CustomizationPart
 {
 
-	[CustomizationObjectForm.ReadOnly]
+	[ObjectForm.ReadOnly]
 	public int Id { get; set; }
-	[CustomizationObjectForm.CategoryDropdown]
+	[ObjectForm.CategoryDropdown]
 	public int CategoryId { get; set; }
 	public string DisplayName { get; set; }
-	[CustomizationObjectForm.FilePicker]
+	[ObjectForm.FilePicker]
 	public string IconPath { get; set; }
-	[CustomizationObjectForm.AssetPicker]
+	[ObjectForm.AssetPicker]
 	public string AssetPath { get; set; }
 
 }
