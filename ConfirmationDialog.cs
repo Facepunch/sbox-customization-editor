@@ -6,31 +6,40 @@ namespace Facepunch.CustomizationTool;
 internal class ConfirmationDialog : Dialog
 {
 
-	public string DisplayName { get; set; }
+	private Widget content;
+	private Widget footer;
+	private Button cancelButton;
+	private Button confirmButton;
 
-	public ConfirmationDialog( Widget parent, string title, string message, Action onConfirm = null, Action onCancel = null )
+	private Action onCancel;
+	private Action onConfirm;
+
+	public ConfirmationDialog( Widget parent )
 		: base( parent )
 	{
 		SetLayout( LayoutMode.TopToBottom );
 		Layout.Margin = 10;
 
-		Window.Title = title;
+		Window.Title = "Confirm";
 		Window.Height = 150;
 
-		var label = Layout.Add( new Label( message, this ) );
+		content = Layout.Add( new Widget( this ), 1 );
+		content.SetLayout(LayoutMode.TopToBottom);
 
-		var btns = new Widget( this );
+		footer = new Widget( this );
 		{
-			btns.SetLayout( LayoutMode.RightToLeft );
-			btns.Layout.Spacing = 10;
+			footer.SetLayout( LayoutMode.RightToLeft );
+			footer.Layout.Spacing = 10;
 
-			btns.Layout.Add( new Button( "Cancel", "cancel", btns ) ).Clicked += () =>
+			cancelButton = footer.Layout.Add( new Button( "Cancel", "cancel", footer ) );
+			cancelButton.Clicked += () =>
 			{
 				onCancel?.Invoke();
 				Close();
 			};
 
-			btns.Layout.Add( new Button( "Yes", "check", btns ) ).Clicked += () =>
+			confirmButton = footer.Layout.Add( new Button( "Yes", "check", footer ) );
+			confirmButton.Clicked += () =>
 			{
 				onConfirm?.Invoke();
 				Close();
@@ -38,9 +47,43 @@ internal class ConfirmationDialog : Dialog
 		}
 
 		Layout.AddStretchCell( 1 );
-		Layout.Add( btns );
+		Layout.Add( footer );
 
 		Show();
+	}
+
+	public ConfirmationDialog WithTitle( string title )
+	{
+		Window.Title = title;
+		return this;
+	}
+
+	public ConfirmationDialog WithWidget( Widget widget )
+	{
+		content.Children.FirstOrDefault()?.Destroy();
+		content.Layout.Add( widget );
+		return this;
+	}
+
+	public ConfirmationDialog WithMessage( string message )
+	{
+		content.Children.FirstOrDefault()?.Destroy();
+		content.Layout.Add( new Label( message ) );
+		return this;
+	}
+
+	public ConfirmationDialog WithConfirm( Action onConfirm, string text = null )
+	{
+		this.onConfirm = onConfirm;
+		confirmButton.Text = text ?? confirmButton.Text;
+		return this;
+	}
+
+	public ConfirmationDialog WithCancel( Action onCancel, string text = null )
+	{
+		this.onCancel = onCancel;
+		cancelButton.Text = text ?? cancelButton.Text;
+		return this;
 	}
 
 }

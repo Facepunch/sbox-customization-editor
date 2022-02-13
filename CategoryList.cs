@@ -90,11 +90,14 @@ internal class CategoryList : Widget
 			delBtn.Cursor = CursorShape.Finger;
 			delBtn.Clicked += () =>
 			{
-				new ConfirmationDialog( Parent, "Delete Category", "Are you sure you wanna delete category: " + cat.DisplayName, () =>
-				{
-					config.Categories.Remove( cat );
-					OnModified?.Invoke();
-				} );
+				new ConfirmationDialog( Parent )
+					.WithTitle( "Delete Category" )
+					.WithMessage( "Are you sure you wanna delete category: " + cat.DisplayName )
+					.WithConfirm( () =>
+					{
+						config.Categories.Remove( cat );
+						OnModified?.Invoke();
+					} );
 			};
 		}
 
@@ -119,11 +122,14 @@ internal class CategoryList : Widget
 			delBtn.Cursor = CursorShape.Finger;
 			delBtn.Clicked += () =>
 			{
-				new ConfirmationDialog( Parent, "Delete Part", "Are you sure you wanna delete part: " + part.DisplayName, () =>
-				{
-					config.Parts.Remove( part );
-					OnModified?.Invoke();
-				} );
+				new ConfirmationDialog( Parent )
+					.WithTitle( "Delete Part" )
+					.WithMessage( "Are you sure you wanna delete part: " + part.DisplayName )
+					.WithConfirm( () =>
+					{
+						config.Parts.Remove( part );
+						OnModified?.Invoke();
+					} );
 			};
 		}
 	}
