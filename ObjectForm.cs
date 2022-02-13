@@ -20,7 +20,7 @@ public class ObjectForm : Widget
 	{
 		if ( obj == null ) throw new NullReferenceException();
 
-		var clone = DeepClone( obj );
+		var clone = JsonSerializer.Deserialize( JsonSerializer.Serialize( obj ), obj.GetType() );
 
 		SetLayout( LayoutMode.TopToBottom );
 		Layout.Spacing = 5;
@@ -121,12 +121,7 @@ public class ObjectForm : Widget
 		return string.Join( " ", Regex.Split( source, @"(?<!^)(?=[A-Z])" ) );
 	}
 
-	static object DeepClone( object obj )
-	{
-		return JsonSerializer.Deserialize( JsonSerializer.Serialize( obj ), obj.GetType() );
-	}
-
-	public void CopyValues( object target, object source )
+	static void CopyValues( object target, object source )
 	{
 		if ( target == null ) throw new ArgumentNullException( nameof( target ) );
 		if ( source == null ) throw new ArgumentNullException( nameof( source ) );
