@@ -10,7 +10,7 @@ public class CustomizationTool : Window
 {
 
 	private CategoryList categoryList;
-	private Widget displayedConfigForm;
+	private CustomizationObjectForm displayedForm;
 
 	public static CustomizationTool Singleton;
 
@@ -89,24 +89,19 @@ public class CustomizationTool : Window
 		var content = w.Layout.Add( new Widget( this ), 1 );
 		content.SetLayout( LayoutMode.TopToBottom );
 
-		var tbtn = sidebar.Layout.Add( new Button( "asset picker test", "science", this ) );
-		tbtn.Clicked += () =>
-		{
-			displayedConfigForm?.Destroy();
-			displayedConfigForm = content.Layout.Add( new AssetPicker( this ) );
-		};
-
 		categoryList = sidebar.Layout.Add( new CategoryList( Config, sidebar ) );
 		categoryList.OnCategorySelected += ( cat ) =>
 		{
-			displayedConfigForm?.Destroy();
-			displayedConfigForm = content.Layout.Add( new EditCategory( cat, content ) );
+			displayedForm?.Destroy();
+			displayedForm = content.Layout.Add( new CustomizationObjectForm( cat, content ) );
+			displayedForm.OnSave += SaveConfig;
 		};
 
 		categoryList.OnPartSelected += ( part ) =>
 		{
-			displayedConfigForm?.Destroy();
-			displayedConfigForm = content.Layout.Add( new EditPart( part, content ) );
+			displayedForm?.Destroy();
+			displayedForm = content.Layout.Add( new CustomizationObjectForm( part, content ) );
+			displayedForm.OnSave += SaveConfig;
 		};
 
 		categoryList.OnModified += () =>
@@ -115,19 +110,6 @@ public class CustomizationTool : Window
 			SaveConfig();
 			categoryList.RefreshCategories();
 		};
-
-		sidebar.Layout.AddSpacingCell( 16 );
-
-		var saveBtn = sidebar.Layout.Add( new Button( "Save Changes", "save", this ) );
-		saveBtn.SetStyles( "Button { background-color: red; }" );
-		saveBtn.Clicked += () =>
-		{
-			// todo: dirty, press save?
-			SaveConfig();
-			categoryList.RefreshCategories();
-		};
-
-		displayedConfigForm = content.Layout.Add( new AssetPicker( this ) );
 	}
 
 	protected override void OnPaint()
