@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using Tools;
 
@@ -17,6 +19,8 @@ public class ObjectForm : Widget
 		: base( parent )
 	{
 		if ( obj == null ) throw new NullReferenceException();
+
+		var clone = DeepClone( obj );
 
 		SetLayout( LayoutMode.TopToBottom );
 		Layout.Spacing = 5;
@@ -40,7 +44,7 @@ public class ObjectForm : Widget
 			lineedit.MinimumSize = label.MinimumSize;
 			lineedit.TextChanged += ( v ) =>
 			{
-				prop.SetValue( obj, v );
+				prop.SetValue( clone, v );
 				MarkDirty();
 			};
 			lineedit.ReadOnly = prop.GetCustomAttribute<ReadOnlyAttribute>() != null;
@@ -92,6 +96,7 @@ public class ObjectForm : Widget
 		saveButton.Enabled = false;
 		saveButton.Clicked += () =>
 		{
+			CopyValues( obj, clone );
 			OnSave?.Invoke();
 			saveButton.Enabled = false;
 		};
@@ -114,6 +119,31 @@ public class ObjectForm : Widget
 	static string GetFriendlyPropertyName( string source )
 	{
 		return string.Join( " ", Regex.Split( source, @"(?<!^)(?=[A-Z])" ) );
+	}
+
+	static object DeepClone( object obj )
+	{
+		return JsonSerializer.Deserialize( JsonSerializer.Serialize( obj ), obj.GetType() );
+	}
+
+	public void CopyValues( object target, object source )
+	{
+		if ( target == null ) throw new ArgumentNullException( nameof( target ) );
+		if ( source == null ) throw new ArgumentNullException( nameof( source ) );
+
+		Type t = target.GetType();
+
+		var properties = t.GetProperties(
+			  BindingFlags.Instance | BindingFlags.Public ).Where( prop =>
+					prop.CanRead
+				 && prop.CanWrite
+				 && prop.GetIndexParameters().Length == 0 );
+
+		foreach ( var prop in properties )
+		{
+			var value = prop.GetValue( source, null );
+			prop.SetValue( target, value, null );
+		}
 	}
 
 	public class ReadOnlyAttribute : Attribute { }
