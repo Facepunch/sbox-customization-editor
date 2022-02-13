@@ -79,12 +79,12 @@ internal class CategoryList : Widget
 			addBtn.Cursor = CursorShape.Finger;
 			addBtn.Clicked += () =>
 			{
-				CreatePartRecord obj = new( cat.Id, "New Category" );
+				CreatePartRecord obj = new( cat.Id, "New Part" );
 				CustomizationObjectForm widget = new( obj, this, false );
 
 				new ConfirmationDialog( this )
 					.WithWidget( widget )
-					.WithTitle( "Create a Category" )
+					.WithTitle( "Create a Part" )
 					.WithConfirm( () =>
 					{
 						config.PartIdAccumulator++;
