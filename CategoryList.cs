@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Sandbox;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Tools;
 
 namespace Facepunch.CustomizationTool;
@@ -21,6 +23,8 @@ public class CategoryList : Widget
 	private Widget Canvas;
 	private ScrollArea Scroll;
 	private CustomizationConfig config;
+	private object selected;
+	private static Fuck selectedFuck;
 
 	public CategoryList( CustomizationConfig config, Widget parent = null )
 		: base( parent )
@@ -28,6 +32,11 @@ public class CategoryList : Widget
 		this.config = config;
 
 		SetLayout( LayoutMode.TopToBottom );
+
+		Layout.Add( new Button( "Refresh", "refresh", this ) ).Clicked += () =>
+		{
+			RefreshCategories();
+		};
 
 		var newCategoryButton = Layout.Add( new Button( "New Category", "add", this ) );
 		newCategoryButton.Clicked += () =>
@@ -72,9 +81,19 @@ public class CategoryList : Widget
 			catBtn.Cursor = CursorShape.Finger;
 			catBtn.Clicked += () =>
 			{
+				if ( selectedFuck.IsValid() ) selectedFuck.SetActive( false );
 				fuck.SetActive( true );
 				OnCategorySelected?.Invoke( cat );
+				selected = cat;
+				selectedFuck = fuck;
 			};
+
+			if ( selected == cat )
+			{
+				fuck.SetActive( true );
+				OnCategorySelected?.Invoke( cat );
+				selectedFuck = fuck;
+			}
 
 			var addBtn = fuck.Layout.Add( new Button( "", "add", Canvas ) );
 			addBtn.MaximumSize = new Vector2( 24, 24 );
@@ -129,10 +148,20 @@ public class CategoryList : Widget
 			partBtn.SetStyles( PartStyle );
 			partBtn.Clicked += () =>
 			{
+				if ( selectedFuck.IsValid() ) selectedFuck.SetActive( false );
 				fuck.SetActive( true );
 				OnPartSelected?.Invoke( part );
+				selected = part;
+				selectedFuck = fuck;
 			};
 			partBtn.Cursor = CursorShape.Finger;
+
+			if( selected == part )
+			{
+				fuck.SetActive( true );
+				OnPartSelected?.Invoke( part );
+				selectedFuck = fuck;
+			}
 
 			var delBtn = fuck.Layout.Add( new Button( "", "delete", Canvas ) );
 			delBtn.MaximumSize = new Vector2( 24, 99 );
@@ -152,8 +181,10 @@ public class CategoryList : Widget
 		}
 	}
 
-	public void RefreshCategories()
+	public async void RefreshCategories()
 	{
+		var scrollPosition = Scroll?.VerticalScrollbar?.SliderPosition;
+
 		foreach ( var child in Canvas.Children )
 			child.Destroy();
 
@@ -176,6 +207,10 @@ public class CategoryList : Widget
 		}
 
 		Scroll.Layout.AddStretchCell( 1 );
+
+		await Task.Delay( 15 );
+
+		Scroll.VerticalScrollbar.SliderPosition = scrollPosition ?? 0;
 	}
 
 	private const string CategoryStyle = @"
@@ -222,7 +257,6 @@ internal class Fuck : Widget
 {
 
 	private bool isHeader;
-	private static Fuck activeFuck;
 
 	public Fuck( bool isHeader, Widget parent = null ) : base( parent )
 	{
@@ -231,23 +265,11 @@ internal class Fuck : Widget
 		SetActive( false );
 	}
 
-	public override void OnDestroyed()
-	{
-		base.OnDestroyed();
-
-		if ( activeFuck == this ) activeFuck = null;
-	}
-
 	public void SetActive( bool active )
 	{
-		if ( activeFuck != null && activeFuck.IsValid && activeFuck != this ) 
-			activeFuck.SetActive( false );
-
 		var d = isHeader ? HeaderFuckStyle : "";
 
 		SetStyles( ( active ? ActiveFuckStyle : FuckStyle ) + d );
-
-		activeFuck = this;
 	}
 
 	private const string FuckStyle = @"
