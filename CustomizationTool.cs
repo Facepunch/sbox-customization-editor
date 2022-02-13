@@ -94,14 +94,22 @@ public class CustomizationTool : Window
 		{
 			displayedForm?.Destroy();
 			displayedForm = content.Layout.Add( new ObjectForm( cat, content ) );
-			displayedForm.OnSave += SaveConfig;
+			displayedForm.OnSave += () =>
+			{
+				SaveConfig();
+				categoryList.RefreshCategories();
+			};
 		};
 
 		categoryList.OnPartSelected += ( part ) =>
 		{
 			displayedForm?.Destroy();
 			displayedForm = content.Layout.Add( new ObjectForm( part, content ) );
-			displayedForm.OnSave += SaveConfig;
+			displayedForm.OnSave += () =>
+			{
+				SaveConfig();
+				categoryList.RefreshCategories();
+			};
 		};
 
 		categoryList.OnModified += () =>
