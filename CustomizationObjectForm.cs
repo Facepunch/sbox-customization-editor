@@ -13,7 +13,7 @@ internal class CustomizationObjectForm : Widget
 
 	private Button saveButton;
 
-	public CustomizationObjectForm( object obj, Widget parent )
+	public CustomizationObjectForm( object obj, Widget parent, bool saveBtn = true )
 		: base( parent )
 	{
 		if ( obj == null ) throw new NullReferenceException();
@@ -90,6 +90,7 @@ internal class CustomizationObjectForm : Widget
 			OnSave?.Invoke();
 			saveButton.Enabled = false;
 		};
+		saveButton.Visible = saveBtn;
 	}
 
 	private void MarkDirty()

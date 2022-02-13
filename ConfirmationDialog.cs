@@ -3,7 +3,7 @@ using Tools;
 
 namespace Facepunch.CustomizationTool;
 
-internal class ConfirmationDialog : Window
+internal class ConfirmationDialog : Dialog
 {
 
 	public string DisplayName { get; set; }
@@ -11,46 +11,34 @@ internal class ConfirmationDialog : Window
 	public ConfirmationDialog( Widget parent, string title, string message, Action onConfirm = null, Action onCancel = null )
 		: base( parent )
 	{
-		IsDialog = true;
-		CloseButtonVisible = false;
-		DeleteOnClose = true;
-		ResizeButtonsVisible = false;
-		Title = title;
-		Size = new Vector2( 350, 128 );
+		SetLayout( LayoutMode.TopToBottom );
+		Layout.Margin = 10;
 
-		//
-		var w = new Widget( null );
-		w.SetLayout( LayoutMode.TopToBottom );
-		w.Layout.Margin = 10;
+		Window.Title = title;
+		Window.Height = 150;
 
-		Canvas = w;
+		var label = Layout.Add( new Label( message, this ) );
 
-		var layout = w.Layout.Add( new Label( message, this ) );
-
-		var btns = new Widget( w );
+		var btns = new Widget( this );
 		{
-			btns.SetLayout( LayoutMode.LeftToRight );
-			btns.Layout.AddStretchCell( 100 );
-			btns.Layout.Margin = 10;
-			var cancel = btns.Layout.Add( new Button( "Cancel", "cancel", btns ) );
-			var confirm = btns.Layout.Add( new Button( "Yes", "check", btns ) );
+			btns.SetLayout( LayoutMode.RightToLeft );
+			btns.Layout.Spacing = 10;
 
-			cancel.Clicked += () =>
+			btns.Layout.Add( new Button( "Cancel", "cancel", btns ) ).Clicked += () =>
 			{
 				onCancel?.Invoke();
 				Close();
 			};
 
-			confirm.Clicked += () =>
+			btns.Layout.Add( new Button( "Yes", "check", btns ) ).Clicked += () =>
 			{
 				onConfirm?.Invoke();
 				Close();
 			};
 		}
 
-		w.Layout.AddStretchCell( 1 );
-		w.Layout.Add( btns );
-		//
+		Layout.AddStretchCell( 1 );
+		Layout.Add( btns );
 
 		Show();
 	}
