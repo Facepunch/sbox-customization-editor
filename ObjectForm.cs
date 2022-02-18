@@ -12,6 +12,7 @@ public class ObjectForm : Widget
 
 	public Action OnDirty;
 	public Action OnSave;
+	public bool AutoSave;
 
 	private Button saveButton;
 
@@ -45,6 +46,11 @@ public class ObjectForm : Widget
 			lineedit.TextChanged += ( v ) =>
 			{
 				prop.SetValue( clone, v );
+				if ( AutoSave )
+				{
+					CopyValues( obj, clone );
+					return;
+				}
 				MarkDirty();
 			};
 			lineedit.ReadOnly = prop.GetCustomAttribute<ReadOnlyAttribute>() != null;

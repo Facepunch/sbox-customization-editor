@@ -43,6 +43,7 @@ public class CategoryList : Widget
 		{
 			CategoryRecord obj = new( "New Category" );
 			ObjectForm widget = new( obj, this, false );
+			widget.AutoSave = true;
 
 			new ConfirmDialog( this )
 				.WithWidget( widget )
@@ -105,6 +106,7 @@ public class CategoryList : Widget
 			{
 				PartRecord obj = new( cat.Id, "New Part" );
 				ObjectForm widget = new( obj, this, false );
+				widget.AutoSave = true;
 
 				new ConfirmDialog( this )
 					.WithWidget( widget )
