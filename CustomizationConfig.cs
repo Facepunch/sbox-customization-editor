@@ -18,7 +18,7 @@ public class CustomizationCategory
 	[ObjectForm.ReadOnly]
 	public int Id { get; set; }
 	public string DisplayName { get; set; }
-	[ObjectForm.ImagePicker]
+	[ObjectForm.AssetPicker]
 	public string IconPath { get; set; }
 	[ObjectForm.PartDropdown]
 	public int DefaultPartId { get; set; }
@@ -33,7 +33,7 @@ public class CustomizationPart
 	[ObjectForm.CategoryDropdown]
 	public int CategoryId { get; set; }
 	public string DisplayName { get; set; }
-	[ObjectForm.ImagePicker]
+	[ObjectForm.AssetPicker]
 	public string IconPath { get; set; }
 	[ObjectForm.AssetPicker]
 	public string AssetPath { get; set; }

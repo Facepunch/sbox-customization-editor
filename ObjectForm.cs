@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sandbox;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
@@ -37,10 +38,23 @@ public class ObjectForm : Widget
 			row.MinimumSize = Theme.RowHeight;
 			row.Layout.Spacing = 5;
 
-			var label = row.Layout.Add( new Label( GetFriendlyPropertyName( prop.Name ), this ) );
+			// label, stretch
+			var leftside = row.Layout.Add( new Widget( this ) );
+			leftside.SetLayout( LayoutMode.TopToBottom );
+
+			var label = leftside.Layout.Add( new Label( GetFriendlyPropertyName( prop.Name ), this ) );
 			label.MinimumSize = new Vector2( 150, Theme.RowHeight );
 
-			var lineedit = row.Layout.Add( new LineEdit( this ) );
+			leftside.Layout.AddStretchCell( 1 );
+
+			// line editor, button, icon
+			var rightside = row.Layout.Add( new Widget( this ) );
+			rightside.SetLayout( LayoutMode.TopToBottom );
+
+			var rightsideTop = rightside.Layout.Add( new Widget( this ) );
+			rightsideTop.SetLayout( LayoutMode.LeftToRight );
+
+			var lineedit = rightsideTop.Layout.Add( new LineEdit( this ) );
 			lineedit.Text = prop.GetValue( obj )?.ToString();
 			lineedit.MinimumSize = label.MinimumSize;
 			lineedit.TextChanged += ( v ) =>
@@ -60,27 +74,9 @@ public class ObjectForm : Widget
 				lineedit.SetStyles( "border:0;" );
 			}
 
-			if ( prop.GetCustomAttribute<ImagePickerAttribute>() != null )
-			{
-				var btn = row.Layout.Add( new Button( "Image Picker", this ), -1 );
-				btn.MinimumSize = new Vector2( 100, Theme.RowHeight );
-				btn.Clicked += () =>
-				{
-					string img = null;
-					var imagePiker = new ImagePicker( this );
-					imagePiker.OnImagePicked += v => img = v;
-
-					var dialog = new ConfirmDialog( this )
-						.WithTitle( "Select an image" )
-						.WithSize( 800, 500 )
-						.WithWidget( imagePiker )
-						.WithConfirm( () => lineedit.Text = img ?? lineedit.Text );
-				};
-			}
-
 			if( prop.GetCustomAttribute<AssetPickerAttribute>() != null )
 			{
-				var btn = row.Layout.Add( new Button( "Asset Picker", this ), -1 );
+				var btn = rightsideTop.Layout.Add( new Button( "Asset Picker", this ), -1 );
 				btn.MinimumSize = new Vector2( 100, Theme.RowHeight );
 				btn.Clicked += () =>
 				{
@@ -94,6 +90,8 @@ public class ObjectForm : Widget
 						.WithWidget( assetPiker )
 						.WithConfirm( () => lineedit.Text = asset?.Path ?? lineedit.Text );
 				};
+
+				rightside.Layout.Add( new SimpleThumb( lineedit, this ) );
 			}
 		}
 
@@ -150,9 +148,47 @@ public class ObjectForm : Widget
 
 	public class ReadOnlyAttribute : Attribute { }
 	public class FilePickerAttribute : Attribute { }
-	public class ImagePickerAttribute : Attribute { }
 	public class AssetPickerAttribute : Attribute { }
 	public class CategoryDropdownAttribute : Attribute { }
 	public class PartDropdownAttribute : Attribute { }
+
+	private class SimpleThumb : Widget
+	{
+
+		private LineEdit userinput;
+
+		public SimpleThumb( LineEdit userinput, Widget parent = null )
+			: base( parent )
+		{
+			this.userinput = userinput;
+
+			MinimumSize = new Vector2( 64, 64 );
+
+			userinput.TextChanged += ( v ) =>
+			{
+				Update();
+				Update();
+			};
+		}
+
+		protected override void OnPaint()
+		{
+			base.OnPaint();
+
+			var path = Path.Combine( CustomizationTool.Singleton.Addon.Config.Directory.FullName, userinput.Text );
+			var asset = AssetSystem.FindByPath( path );
+			var thumb = asset?.GetAssetThumb();
+			var r = new Rect( 0, 0, 64, 64 );
+
+			Paint.SetPenEmpty();
+			Paint.SetBrush( Color.Black );
+			Paint.DrawRect( r, 4 );
+
+			if ( thumb == null ) return;
+
+			Paint.Draw( r.Expand( -4, -4 ), thumb );
+		}
+
+	}
 
 }

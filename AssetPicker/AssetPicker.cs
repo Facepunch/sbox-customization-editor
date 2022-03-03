@@ -146,7 +146,7 @@ public class AssetPicker : Widget
 	{
 		var ext = Path.GetExtension( asset.AbsolutePath );
 
-		if ( !AssetExtensions.ContainsValue( ext ) ) return false;
+		if ( !AssetExtensions.Values.Any( x => x.Contains( ext, StringComparison.OrdinalIgnoreCase ) ) ) return false;
 
 		return true;
 	}
@@ -166,6 +166,7 @@ public class AssetPicker : Widget
 		Model = 1,
 		Particle = 2,
 		Material = 3,
+		Image = 4,
 	}
 
 	private static Dictionary<AssetType, string> AssetExtensions = new()
@@ -173,6 +174,7 @@ public class AssetPicker : Widget
 		{ AssetType.Model, ".vmdl" },
 		{ AssetType.Particle, ".vpcf" },
 		{ AssetType.Material, ".vmat" },
+		{ AssetType.Image, ".png .jpg" },
 	};
 
 }
