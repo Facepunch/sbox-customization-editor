@@ -60,20 +60,21 @@ public class ObjectForm : Widget
 				lineedit.SetStyles( "border:0;" );
 			}
 
-			if ( prop.GetCustomAttribute<FilePickerAttribute>() != null )
+			if ( prop.GetCustomAttribute<ImagePickerAttribute>() != null )
 			{
-				var btn = row.Layout.Add( new Button( "File Dialog", this ), -1 );
+				var btn = row.Layout.Add( new Button( "Image Picker", this ), -1 );
 				btn.MinimumSize = new Vector2( 100, Theme.RowHeight );
 				btn.Clicked += () =>
 				{
-					var fd = new FileDialog( this );
-					fd.Title = "Find " + label.Text;
-					fd.SetFindFile();
+					string img = null;
+					var imagePiker = new ImagePicker( this );
+					imagePiker.OnImagePicked += v => img = v;
 
-					if ( fd.Execute() )
-					{
-						lineedit.Text = CustomizationTool.Singleton.GetAddonRelativePath( fd.SelectedFile );
-					}
+					var dialog = new ConfirmDialog( this )
+						.WithTitle( "Select an image" )
+						.WithSize( 800, 500 )
+						.WithWidget( imagePiker )
+						.WithConfirm( () => lineedit.Text = img ?? lineedit.Text );
 				};
 			}
 
@@ -149,6 +150,7 @@ public class ObjectForm : Widget
 
 	public class ReadOnlyAttribute : Attribute { }
 	public class FilePickerAttribute : Attribute { }
+	public class ImagePickerAttribute : Attribute { }
 	public class AssetPickerAttribute : Attribute { }
 	public class CategoryDropdownAttribute : Attribute { }
 	public class PartDropdownAttribute : Attribute { }
