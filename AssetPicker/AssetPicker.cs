@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using Tools;
 
 namespace CustomizationEditor;
@@ -92,14 +93,30 @@ public class AssetPicker : Widget
 
 		row.Layout.Spacing = 3;
 
-		var assets = AssetSystem.All
+		var assets = AssetSystem.All.ToList();
+
+		var addonpath = Path.GetDirectoryName( GetSelectedAddon().Path );
+		var files = Directory.GetFiles( addonpath, "*.*", SearchOption.AllDirectories );
+		var imageFiles = new List<string>();
+		foreach ( string filename in files )
+		{
+			if ( Regex.IsMatch( filename, @"\.jpg$|\.png$" ) )
+			{
+				var asset = AssetSystem.FindByPath( filename );
+				if ( asset == null ) continue;
+				assets.Add( asset );
+			}
+		}
+
+		assets = AssetSystem.All
 			.Where( x => BelongsToAddon( x, addon ) )
 			.Where( x => ShouldShow( x ) )
-			.Where( x => IsAssetType( x, type ) );
+			.Where( x => IsAssetType( x, type ) )
+			.ToList();
 
-		if( !string.IsNullOrEmpty( search ) )
+		if ( !string.IsNullOrEmpty( search ) )
 		{
-			assets = assets.Where( x => x.Path.Contains( search, StringComparison.OrdinalIgnoreCase ) );
+			assets = assets.Where( x => x.Path.Contains( search, StringComparison.OrdinalIgnoreCase ) ).ToList();
 		}
 
 		// note: size doesn't set until after a Resize, so set a fixed col count
@@ -146,7 +163,8 @@ public class AssetPicker : Widget
 	{
 		var ext = Path.GetExtension( asset.AbsolutePath );
 
-		if ( !AssetExtensions.Values.Any( x => x.Contains( ext, StringComparison.OrdinalIgnoreCase ) ) ) return false;
+		if ( !AssetExtensions.Values.Any( x => x.Contains( ext, StringComparison.OrdinalIgnoreCase ) ) )
+			return false;
 
 		return true;
 	}
@@ -157,7 +175,7 @@ public class AssetPicker : Widget
 
 		if ( !AssetExtensions.ContainsKey( type ) ) return false;
 
-		return AssetExtensions[type] == Path.GetExtension( asset.AbsolutePath );
+		return AssetExtensions[type].Contains( Path.GetExtension( asset.AbsolutePath ), StringComparison.OrdinalIgnoreCase );
 	}
 
 	private enum AssetType
@@ -174,7 +192,7 @@ public class AssetPicker : Widget
 		{ AssetType.Model, ".vmdl" },
 		{ AssetType.Particle, ".vpcf" },
 		{ AssetType.Material, ".vmat" },
-		{ AssetType.Image, ".png .jpg" },
+		{ AssetType.Image, ".png .jpg .tga" },
 	};
 
 }
