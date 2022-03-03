@@ -2,6 +2,8 @@
 using Sandbox;
 using Tools;
 
+namespace CustomizationEditor;
+
 internal class AssetButton : Widget
 {
 

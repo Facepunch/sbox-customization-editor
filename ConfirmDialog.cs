@@ -1,7 +1,7 @@
 ﻿using System;
 using Tools;
 
-namespace Facepunch.CustomizationTool;
+namespace CustomizationEditor;
 
 public class ConfirmDialog : Dialog
 {

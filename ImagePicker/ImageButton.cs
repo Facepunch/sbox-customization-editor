@@ -1,9 +1,10 @@
 ﻿
-using Facepunch.CustomizationTool;
 using Sandbox;
 using System.Collections.Generic;
 using System.IO;
 using Tools;
+
+namespace CustomizationEditor;
 
 internal class ImageButton : Widget
 {

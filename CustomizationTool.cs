@@ -3,7 +3,7 @@ using System.IO;
 using System.Text.Json;
 using Tools;
 
-namespace Facepunch.CustomizationTool;
+namespace CustomizationEditor;
 
 [Tool( "Customization", "science", "Manage a gamemode's customization shit" )]
 public class CustomizationTool : Window

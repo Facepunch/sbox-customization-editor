@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Tools;
 
-namespace Facepunch.CustomizationTool;
+namespace CustomizationEditor;
 
 public class CategoryList : Widget
 {

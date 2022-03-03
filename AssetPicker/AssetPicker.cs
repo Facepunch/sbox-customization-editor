@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using Tools;
 
+namespace CustomizationEditor;
+
 public class AssetPicker : Widget
 {
 

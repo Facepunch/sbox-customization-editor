@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Facepunch.CustomizationTool;
+namespace CustomizationEditor;
 
 public class CustomizationConfig
 {

@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Tools;
 
-namespace Facepunch.CustomizationTool;
+namespace CustomizationEditor;
 
 public class ObjectForm : Widget
 {

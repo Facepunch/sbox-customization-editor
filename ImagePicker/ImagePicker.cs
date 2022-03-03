@@ -1,10 +1,11 @@
-﻿using Facepunch.CustomizationTool;
-using Sandbox;
+﻿using Sandbox;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using Tools;
+
+namespace CustomizationEditor;
 
 //
 // todo: this is basically the same as AssetPicker,
