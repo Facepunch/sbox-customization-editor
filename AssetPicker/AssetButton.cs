@@ -74,7 +74,12 @@ internal class AssetButton : Widget
 		Paint.SetPen( border, 2 );
 		Paint.SetBrush( Theme.Black );
 		Paint.DrawRect( r, 4 );
-		Paint.Draw( r, asset.GetAssetThumb() );
+
+		var thumb = asset.GetAssetThumb();
+		if( thumb != null )
+		{
+			Paint.Draw( r, thumb );
+		}
 
 		Paint.SetDefaultFont();
 		Paint.SetPen( Theme.White, 2 );

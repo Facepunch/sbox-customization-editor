@@ -22,7 +22,7 @@ public class ConfirmDialog : Dialog
 
 		Window.Title = "Confirm";
 		Window.Size = new Vector2( 500, 175 );
-
+		
 		content = Layout.Add( new Widget( this ) );
 		content.SetLayout(LayoutMode.TopToBottom);
 
