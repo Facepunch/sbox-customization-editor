@@ -78,7 +78,7 @@ internal class AssetButton : Widget
 		var thumb = asset.GetAssetThumb();
 		if( thumb != null )
 		{
-			Paint.Draw( r, thumb );
+			Paint.Draw( r.Expand( -4, -4 ), thumb );
 		}
 
 		Paint.SetDefaultFont();

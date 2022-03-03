@@ -162,13 +162,15 @@ public class AssetPicker : Widget
 	{
 		All = 0,
 		Model = 1,
-		Particle = 2
+		Particle = 2,
+		Material = 3,
 	}
 
 	private static Dictionary<AssetType, string> AssetExtensions = new()
 	{
 		{ AssetType.Model, ".vmdl" },
 		{ AssetType.Particle, ".vpcf" },
+		{ AssetType.Material, ".vmat" },
 	};
 
 }
