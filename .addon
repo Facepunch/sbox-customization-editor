@@ -1,0 +1,13 @@
+{
+  "Title": "Customization Editor",
+  "Type": "tool",
+  "Org": "local",
+  "Ident": "customization",
+  "Schema": 1,
+  "HasAssets": true,
+  "AssetsPath": "/assets",
+  "ResourcePaths": null,
+  "HasCode": true,
+  "CodePath": "/code",
+  "RootNamespace": "Tools"
+}

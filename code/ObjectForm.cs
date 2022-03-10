@@ -1,6 +1,7 @@
 ﻿using Sandbox;
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -37,7 +38,7 @@ public class ObjectForm : Widget
 			row.SetLayout( LayoutMode.LeftToRight );
 			row.MinimumSize = Theme.RowHeight;
 			row.Layout.Spacing = 5;
-
+			
 			// label, stretch
 			var leftside = row.Layout.Add( new Widget( this ) );
 			leftside.SetLayout( LayoutMode.TopToBottom );
