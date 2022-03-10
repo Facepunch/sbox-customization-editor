@@ -39,6 +39,8 @@ public class CategoryList : Widget
 			RefreshCategories();
 		};
 
+		Layout.AddSpacingCell( 4 );
+
 		var newCategoryButton = Layout.Add( new Button( "New Category", "add", this ) );
 		newCategoryButton.Clicked += () =>
 		{
@@ -129,7 +131,7 @@ public class CategoryList : Widget
 			};
 
 			var delBtn = fuck.Layout.Add( new Button( "", "delete", Canvas ) );
-			delBtn.MaximumSize = new Vector2( 24, 99 );
+			delBtn.MaximumSize = new Vector2( 24, 24 );
 			delBtn.SetStyles( RedMiniBtnStyle );
 			delBtn.Cursor = CursorShape.Finger;
 			delBtn.Clicked += () =>
@@ -143,6 +145,8 @@ public class CategoryList : Widget
 						OnModified?.Invoke();
 					} );
 			};
+
+			fuck.Layout.AddSpacingCell( 5 );
 		}
 
 		foreach ( var part in parts )
@@ -171,7 +175,7 @@ public class CategoryList : Widget
 			}
 
 			var delBtn = fuck.Layout.Add( new Button( "", "delete", Canvas ) );
-			delBtn.MaximumSize = new Vector2( 24, 99 );
+			delBtn.MaximumSize = new Vector2( 24, 24 );
 			delBtn.SetStyles( RedMiniBtnStyle );
 			delBtn.Cursor = CursorShape.Finger;
 			delBtn.Clicked += () =>
@@ -185,6 +189,8 @@ public class CategoryList : Widget
 						OnModified?.Invoke();
 					} );
 			};
+
+			fuck.Layout.AddSpacingCell( 5 );
 		}
 	}
 
@@ -227,17 +233,16 @@ Button {
 	border: 0;
 	background: none;
 	text-align: left;
-	padding-left: 10px;
+	padding: 10px;
 }
 ";
 
 	private const string PartStyle = @"
 Button {
-	padding: 5px;
-	padding-left: 12px;
-	padding-bottom: 8px;
 	text-align: left;
 	border: 0;
+	background: none;
+	padding: 10px;
 }
 ";
 
@@ -245,8 +250,8 @@ Button {
 Button {
 	background-color: transparent; 
 	text-align: center;
-	border-radius: 4px;
 	padding: 0;
+	border: none;
 }
 Button:hover {
 	background-color: #3c576b;
